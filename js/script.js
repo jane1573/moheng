@@ -907,26 +907,8 @@ function syncBrowserChromeInset() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  // Safari 浏览器：padding-bottom=0（否则 safe-area 会在地址栏上方垫出白条）
-  // 主屏幕 standalone：才加 safe-area
-  const padBottom = isStandalonePwa() ? "env(safe-area-inset-bottom, 0px)" : "0px";
-  const important = ["position", "left", "right", "bottom", "width", "margin", "padding", "height", "min-height", "max-height", "border-radius", "transform", "z-index", "inset", "box-sizing"];
-  important.forEach((k) => bar.style.removeProperty(k));
-  bar.style.setProperty("position", "fixed", "important");
-  bar.style.setProperty("left", "0px", "important");
-  bar.style.setProperty("right", "0px", "important");
-  bar.style.setProperty("bottom", "0px", "important");
-  bar.style.setProperty("width", "100%", "important");
-  bar.style.setProperty("margin", "0", "important");
-  bar.style.setProperty("border-radius", "0", "important");
-  bar.style.setProperty("transform", "none", "important");
-  bar.style.setProperty("z-index", "2147483647", "important");
-  bar.style.setProperty("height", "49px", "important");
-  bar.style.setProperty("min-height", "49px", "important");
-  bar.style.setProperty("max-height", "49px", "important");
-  bar.style.setProperty("padding", "0", "important");
-  bar.style.setProperty("padding-bottom", padBottom, "important");
-  bar.style.setProperty("box-sizing", "content-box", "important");
+  /* 清除内联样式，完全交由 style.css 控制，避免 JS 与 CSS 互相打架 */
+  bar.removeAttribute("style");
 }
 
 function initApp() {
