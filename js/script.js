@@ -900,8 +900,11 @@ function isStandalonePwa() {
 }
 
 function syncBrowserChromeInset() {
-  // Tab 使用 position:fixed + safe-area，不再用 visualViewport 抬高，避免悬空
   document.documentElement.style.setProperty("--browser-chrome-bottom", "0px");
+}
+
+function syncStandaloneClass() {
+  document.documentElement.classList.toggle("is-standalone", isStandalonePwa());
 }
 
 function lockTabbar() {
@@ -915,6 +918,7 @@ function initApp() {
   if (!state || !Array.isArray(state.goals) || !Array.isArray(state.habits)) {
     state = createDefaultState();
   }
+  syncStandaloneClass();
   syncBrowserChromeInset();
   lockTabbar();
   renderAll();
