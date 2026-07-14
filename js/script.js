@@ -888,6 +888,7 @@ function renderAll() {
   renderRadarChart();
   renderScores();
   renderMe();
+  lockTabbar();
 }
 
 function isStandalonePwa() {
@@ -906,12 +907,16 @@ function syncBrowserChromeInset() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  bar.style.position = "fixed";
-  bar.style.left = "14px";
-  bar.style.right = "14px";
-  bar.style.bottom = "calc(10px + env(safe-area-inset-bottom, 0px))";
-  bar.style.zIndex = "10000";
-  bar.style.transform = "translateZ(0)";
+  // 强制贴屏幕物理底边；安全区只靠 padding-bottom，禁止再抬 bottom
+  bar.style.setProperty("position", "fixed", "important");
+  bar.style.setProperty("left", "0", "important");
+  bar.style.setProperty("right", "0", "important");
+  bar.style.setProperty("bottom", "0", "important");
+  bar.style.setProperty("width", "100%", "important");
+  bar.style.setProperty("margin", "0", "important");
+  bar.style.setProperty("transform", "none", "important");
+  bar.style.setProperty("z-index", "2147483647", "important");
+  bar.style.removeProperty("top");
 }
 
 function initApp() {
