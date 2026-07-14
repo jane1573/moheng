@@ -892,11 +892,11 @@ body::before {
     border: 0 !important;
     box-shadow: none !important;
     margin: 0 !important;
-    /* 内容避让：Tab 内容高 49px + 底部安全区（body 不再加 padding-bottom） */
+    /* 内容避让 Tab：Safari 浏览器里 bottom:0 已在工具栏上方，不要再叠 safe-area */
     padding:
       12px
       16px
-      calc(49px + env(safe-area-inset-bottom, 0px)) !important;
+      49px !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     overscroll-behavior-y: none;
@@ -944,8 +944,10 @@ body::before {
   }
 
   /*
-   * 底部 Tab：贴齐屏幕最底（bottom:0）
-   * height 仅 49px（图标+文字）；安全区只用 padding-bottom，不叠进 height
+   * 底部 Tab：position:fixed + bottom:0 贴齐可视区底边
+   * Safari 浏览器：工具栏已避开 Home Indicator，padding-bottom 必须为 0
+   *   （若再加 safe-area 会出现「Tab 与地址栏之间的白条」——见截图）
+   * 主屏幕独立 App：才需要 padding-bottom: safe-area
    */
   .tabbar {
     position: fixed !important;
@@ -959,7 +961,7 @@ body::before {
     max-height: 49px !important;
     margin: 0 !important;
     padding: 0 !important;
-    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    padding-bottom: 0 !important;
     box-sizing: content-box !important;
     border-radius: 0 !important;
     border: 0 !important;
@@ -1000,7 +1002,7 @@ body::before {
   }
 
   .toast {
-    bottom: calc(49px + env(safe-area-inset-bottom, 0px) + 8px);
+    bottom: calc(49px + 8px);
     font-size: 15px;
   }
 
@@ -1087,6 +1089,21 @@ body::before {
 @media (display-mode: standalone), (display-mode: fullscreen) {
   :root {
     --browser-chrome-bottom: 0px !important;
+  }
+
+  /* 主屏幕 App：无 Safari 底栏，需用 safe-area 避开 Home Indicator */
+  .tabbar {
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  .phone-screen,
+  .phone-scroll.phone-screen,
+  .phone-scroll {
+    padding-bottom: calc(49px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .toast {
+    bottom: calc(49px + env(safe-area-inset-bottom, 0px) + 8px);
   }
 }
 

@@ -907,7 +907,9 @@ function syncBrowserChromeInset() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  // 贴屏幕底：height 仅 Tab 内容；安全区只走 padding-bottom（content-box）
+  // Safari 浏览器：padding-bottom=0（否则 safe-area 会在地址栏上方垫出白条）
+  // 主屏幕 standalone：才加 safe-area
+  const padBottom = isStandalonePwa() ? "env(safe-area-inset-bottom, 0px)" : "0px";
   const important = ["position", "left", "right", "bottom", "width", "margin", "padding", "height", "min-height", "max-height", "border-radius", "transform", "z-index", "inset", "box-sizing"];
   important.forEach((k) => bar.style.removeProperty(k));
   bar.style.setProperty("position", "fixed", "important");
@@ -923,7 +925,7 @@ function lockTabbar() {
   bar.style.setProperty("min-height", "49px", "important");
   bar.style.setProperty("max-height", "49px", "important");
   bar.style.setProperty("padding", "0", "important");
-  bar.style.setProperty("padding-bottom", "env(safe-area-inset-bottom, 0px)", "important");
+  bar.style.setProperty("padding-bottom", padBottom, "important");
   bar.style.setProperty("box-sizing", "content-box", "important");
 }
 
