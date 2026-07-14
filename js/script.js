@@ -907,8 +907,8 @@ function syncBrowserChromeInset() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  // 必须贴屏幕底边：禁止再抬高 bottom（否则会出现红框2空白）
-  const important = ["position", "left", "right", "bottom", "width", "margin", "padding", "height", "min-height", "max-height", "border-radius", "transform", "z-index", "inset"];
+  // 贴屏幕底：height 仅 Tab 内容；安全区只走 padding-bottom（content-box）
+  const important = ["position", "left", "right", "bottom", "width", "margin", "padding", "height", "min-height", "max-height", "border-radius", "transform", "z-index", "inset", "box-sizing"];
   important.forEach((k) => bar.style.removeProperty(k));
   bar.style.setProperty("position", "fixed", "important");
   bar.style.setProperty("left", "0px", "important");
@@ -919,10 +919,12 @@ function lockTabbar() {
   bar.style.setProperty("border-radius", "0", "important");
   bar.style.setProperty("transform", "none", "important");
   bar.style.setProperty("z-index", "2147483647", "important");
-  bar.style.setProperty("height", "calc(49px + env(safe-area-inset-bottom, 0px))", "important");
+  bar.style.setProperty("height", "49px", "important");
+  bar.style.setProperty("min-height", "49px", "important");
+  bar.style.setProperty("max-height", "49px", "important");
   bar.style.setProperty("padding", "0", "important");
   bar.style.setProperty("padding-bottom", "env(safe-area-inset-bottom, 0px)", "important");
-  bar.style.setProperty("box-sizing", "border-box", "important");
+  bar.style.setProperty("box-sizing", "content-box", "important");
 }
 
 function initApp() {
