@@ -912,7 +912,11 @@ function lockTabbar() {
   bar.style.setProperty("right", "0", "important");
   bar.style.setProperty("bottom", "0", "important");
   bar.style.setProperty("width", "100%", "important");
+  bar.style.setProperty("height", "auto", "important");
+  bar.style.setProperty("min-height", "0", "important");
   bar.style.setProperty("margin", "0", "important");
+  bar.style.setProperty("padding", "2px 0 env(safe-area-inset-bottom, 0px)", "important");
+  bar.style.setProperty("border-radius", "0", "important");
   bar.style.setProperty("transform", "none", "important");
   bar.style.setProperty("z-index", "2147483647", "important");
   bar.style.removeProperty("top");
