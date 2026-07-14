@@ -999,49 +999,78 @@ body::before {
 
   .toast {
     bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    font-size: 15px;
   }
 
-  .greeting { margin-bottom: 12px; }
-  .greeting h2 { font-size: 26px; line-height: 1.18; }
-  .greeting p { font-size: 13px; }
+  /* iPhone 阅读尺度 */
+  body { font-size: 16px !important; }
+
+  .greeting { margin-bottom: 14px; }
+  .greeting .eyebrow { font-size: 13px; }
+  .greeting h2 { font-size: 30px; line-height: 1.2; font-weight: 700; }
+  .greeting p { font-size: 15px; line-height: 1.55; }
 
   .today-card,
   .focus-card {
-    padding: 14px 14px 12px;
+    padding: 16px 16px 14px;
     border-radius: 18px;
     margin-bottom: 14px;
     box-shadow: 0 10px 28px rgba(31, 107, 85, 0.22);
   }
   .focus-card::after { display: none; }
-  .focus-title { font-size: 26px; }
+  .focus-label { font-size: 13px; }
+  .focus-title { font-size: 30px; font-weight: 700; }
+  .ring .pct { font-size: 16px; font-weight: 700; }
+  .focus-foot { font-size: 13px; }
 
-  .section-h { margin: 14px 0 8px; }
+  .section-h { margin: 16px 0 10px; }
+  .section-h h3 { font-size: 18px; }
+  .section-h button,
+  .linkish { font-size: 15px; }
 
   .goal {
     margin-bottom: 10px;
-    padding: 14px;
+    padding: 15px;
     border-radius: 16px;
   }
+  .goal .name { font-size: 16px; line-height: 1.45; }
+  .goal .tag { font-size: 12px; }
+  .goal .meta { font-size: 13px; }
+  .metric-chip { font-size: 12px; }
+
+  .empty-card {
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+  }
+  .empty-card strong { font-size: 16px; }
+
+  .habit-pill .t { font-size: 15px; }
+  .habit-pill .s { font-size: 13px; }
+  .habit-pill button { font-size: 13px; }
+  .habit-card h4 { font-size: 17px; }
+  .streak { font-size: 13px; }
+  .remind { font-size: 14px; }
+  .alert { font-size: 14px; }
 
   .action-btn,
   .chip-btn.primary {
-    min-height: 44px;
-    font-size: 14px;
+    min-height: 46px;
+    font-size: 15px;
     font-weight: 700;
     border-radius: 12px;
-    padding: 10px 14px;
+    padding: 11px 14px;
   }
+  .chip-btn { font-size: 15px; }
   .goal .actions { gap: 8px; margin-top: 12px; }
   .goal .actions .chip-btn:not(.primary) {
-    min-height: 44px;
+    min-height: 46px;
     flex: 0.55;
   }
   .goal .actions .action-btn,
   .goal .actions .chip-btn.primary {
     flex: 1.45;
   }
-
-  .empty-card { border-radius: 14px; padding: 14px; }
 
   .panel {
     backdrop-filter: none;
