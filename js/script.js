@@ -907,7 +907,6 @@ function syncBrowserChromeInset() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  // 强制贴屏幕物理底边；安全区只靠 padding-bottom，禁止再抬 bottom
   bar.style.setProperty("position", "fixed", "important");
   bar.style.setProperty("left", "0", "important");
   bar.style.setProperty("right", "0", "important");
