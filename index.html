@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-title" content="墨衡" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#1f6b55" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./assets/icon.png" />
+  <link rel="icon" type="image/png" href="./assets/icon.png" />
+  <title>墨衡 · 人生五维动态平衡</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <header class="brand-bar header">
+      <h1>墨衡<span>Five Pillars · Dynamic Balance</span></h1>
+      <div class="brand-meta">
+        当前阶段：<strong>个人主攻</strong><br />
+        产品原型 · 手机版
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- Mobile -->
+      <div class="phone-wrap">
+        <div class="phone" id="phone">
+          <div class="phone-notch phone-mockup" aria-hidden="true"><i></i></div>
+          <div class="phone-scroll phone-screen" id="phoneScroll">
+            <div class="status-row"><span>09:41</span><span>墨衡</span></div>
+
+            <!-- 衡 -->
+            <section class="screen active" data-screen="home">
+              <div class="greeting">
+                <div class="eyebrow">今日衡盘</div>
+                <h2>先把个人维<br />稳住向上</h2>
+                <p>主攻 Top3 清晰可见，其余维度只保底。</p>
+              </div>
+
+              <div class="focus-card today-card">
+                <div class="focus-top">
+                  <div>
+                    <div class="focus-label">本阶段主攻维</div>
+                    <div class="focus-title" id="focusTitle">个人</div>
+                  </div>
+                  <div class="ring">
+                    <svg width="74" height="74" viewBox="0 0 74 74">
+                      <circle cx="37" cy="37" r="30" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="7" />
+                      <circle id="focusRing" cx="37" cy="37" r="30" fill="none" stroke="#e8f6f0" stroke-width="7"
+                        stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="188.4" />
+                    </svg>
+                    <div class="pct" id="focusPct">0%</div>
+                  </div>
+                </div>
+                <div class="focus-foot">
+                  <span id="focusSub">睡眠 · 运动 · 深度时段</span>
+                  <span>第 <b id="weekNo">3</b> 周</span>
+                </div>
+              </div>
+
+              <div class="alert" id="dangerAlert">检测到有维度接近危险线，建议本周优先救火，暂缓加目标。</div>
+
+              <div class="section-h">
+                <h3>主攻 Top3</h3>
+                <button type="button" onclick="openGoalModal()">+ 目标</button>
+              </div>
+              <div class="goal-list" id="mainGoals"></div>
+
+              <div class="section-h" style="margin-top:16px">
+                <h3>今日习惯</h3>
+                <button type="button" class="linkish" onclick="switchTab('habits')">全部</button>
+              </div>
+              <div class="habit-strip" id="habitStrip"></div>
+
+              <div class="section-h" style="margin-top:14px">
+                <h3>保底目标</h3>
+              </div>
+              <div class="goal-list" id="baseGoals"></div>
+            </section>
+
+            <!-- 习 -->
+            <section class="screen" data-screen="habits">
+              <div class="greeting">
+                <div class="eyebrow">习惯养成</div>
+                <h2>提醒到点<br />打卡算数</h2>
+                <p>主攻维相关习惯优先置顶。</p>
+              </div>
+              <div id="habitList"></div>
+            </section>
+
+            <!-- 复 -->
+            <section class="screen" data-screen="review">
+              <div class="greeting">
+                <div class="eyebrow">及时复盘</div>
+                <h2>周日夜<br />给生活称一称</h2>
+                <p>五维打分 + 三问，十五分钟即可。</p>
+              </div>
+              <div class="score-grid" id="scoreGrid"></div>
+              <div class="review-q">
+                <label>本周最满意的一件事</label>
+                <textarea id="rq1" rows="2" placeholder="写下一件具体的事…"></textarea>
+              </div>
+              <div class="review-q">
+                <label>本周最遗憾的一件事</label>
+                <textarea id="rq2" rows="2" placeholder="不评判，只记录…"></textarea>
+              </div>
+              <div class="review-q">
+                <label>信念澄清（可选）本周我更像 / 更不像想成为的人？</label>
+                <textarea id="rq3" rows="2" placeholder="一句话即可…"></textarea>
+              </div>
+              <button class="primary-btn" type="button" onclick="saveReview()">保存本周复盘</button>
+            </section>
+
+            <!-- 我 -->
+            <section class="screen" data-screen="me">
+              <div class="greeting">
+                <div class="eyebrow">阶段设置</div>
+                <h2>主攻与信念</h2>
+                <p>低分阶段只保一个主攻维往上爬。</p>
+              </div>
+              <div class="belief-box">
+                <div class="hint">人生一句话 / 不想成为的人</div>
+                <textarea id="beliefText" placeholder="例：我不想成为成功但身心崩掉的人。"></textarea>
+              </div>
+              <div class="section-h"><h3>切换主攻维</h3></div>
+              <div class="dim-pick" id="dimPick"></div>
+              <button class="primary-btn" type="button" style="margin-top:14px" onclick="saveProfile()">保存设置</button>
+            </section>
+          </div>
+
+          <nav class="tabbar">
+            <button class="tab active" data-tab="home" type="button"><strong>衡</strong><small>首页</small></button>
+            <button class="tab" data-tab="habits" type="button"><strong>习</strong><small>习惯</small></button>
+            <button class="tab" data-tab="review" type="button"><strong>复</strong><small>复盘</small></button>
+            <button class="tab" data-tab="me" type="button"><strong>我</strong><small>阶段</small></button>
+          </nav>
+          <div class="phone-home-indicator phone-mockup" aria-hidden="true"><i></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-bg" id="goalModal">
+    <div class="modal">
+      <h3 id="goalModalTitle">新建目标</h3>
+      <div class="field">
+        <label>目标模板</label>
+        <select id="gTemplate" onchange="onTemplateChange()"></select>
+      </div>
+      <div class="metric-panel">
+        <div id="metricFields"></div>
+        <div class="preview" id="goalPreview">预览将显示在这里</div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>所属维度</label>
+          <select id="gDim"></select>
+        </div>
+        <div class="field">
+          <label>类型</label>
+          <select id="gType">
+            <option value="main">主攻（Top3）</option>
+            <option value="base">保底</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>起始日期（进度从此日累计）</label>
+        <input id="gStartDate" type="date" />
+      </div>
+      <div class="field">
+        <label>进度说明</label>
+        <div id="gProgressHint" style="font-size:12px;color:#3a4038;line-height:1.5;padding:8px 10px;background:#eef0ec;border-radius:10px;">
+          进度按「本周」自动计算：本周打卡次数 ÷ 每周目标；全程累计仅作参考
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="danger" id="gDeleteBtn" style="display:none" onclick="deleteGoal()">删除</button>
+        <button type="button" onclick="closeGoalModal()">取消</button>
+        <button type="button" class="ok" id="gSaveBtn" onclick="saveGoal()">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>

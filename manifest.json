@@ -1,0 +1,20 @@
+{
+  "name": "墨衡",
+  "short_name": "墨衡",
+  "description": "人生五维动态平衡 · 习惯打卡与周复盘",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f8f5",
+  "theme_color": "#1f6b55",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
