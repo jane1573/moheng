@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="./assets/icon.png" />
   <link rel="icon" type="image/png" href="./assets/icon.png" />
   <title>墨衡 · 人生五维动态平衡</title>
-  <link rel="stylesheet" href="./css/style.css?v=20260714h" />
+  <link rel="stylesheet" href="./css/style.css?v=20260714i" />
 </head>
 <body>
   <div class="stage">
@@ -140,6 +140,14 @@
       </div>
   </div>
 
+  <!-- Tab 必须在 body 直接子级，与 .stage 平级，避免受 .phone overflow/transform 影响 -->
+  <nav class="tabbar" id="tabbar" aria-label="主导航">
+    <button class="tab active" data-tab="home" type="button"><strong>衡</strong><small>首页</small></button>
+    <button class="tab" data-tab="habits" type="button"><strong>习</strong><small>习惯</small></button>
+    <button class="tab" data-tab="review" type="button"><strong>复</strong><small>复盘</small></button>
+    <button class="tab" data-tab="me" type="button"><strong>我</strong><small>阶段</small></button>
+  </nav>
+
   <div class="toast" id="toast"></div>
 
   <div class="modal-bg" id="goalModal">
@@ -184,13 +192,6 @@
     </div>
   </div>
 
-  <nav class="tabbar" id="tabbar" aria-label="主导航">
-    <button class="tab active" data-tab="home" type="button"><strong>衡</strong><small>首页</small></button>
-    <button class="tab" data-tab="habits" type="button"><strong>习</strong><small>习惯</small></button>
-    <button class="tab" data-tab="review" type="button"><strong>复</strong><small>复盘</small></button>
-    <button class="tab" data-tab="me" type="button"><strong>我</strong><small>阶段</small></button>
-  </nav>
-
-  <script src="./js/script.js?v=20260714h"></script>
+  <script src="./js/script.js?v=20260714i"></script>
 </body>
 </html>

@@ -910,7 +910,10 @@ function syncStandaloneClass() {
 function lockTabbar() {
   const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
   if (!bar) return;
-  /* 清除内联样式，完全交由 style.css 控制，避免 JS 与 CSS 互相打架 */
+  /* 保证 Tab 永远挂在 body 下，不受 .phone overflow/transform 影响 */
+  if (bar.parentElement !== document.body) {
+    document.body.appendChild(bar);
+  }
   bar.removeAttribute("style");
 }
 
