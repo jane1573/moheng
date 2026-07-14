@@ -17,6 +17,8 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
+  /* Safari 底栏等浏览器自带 UI 高度（由 JS visualViewport 写入） */
+  --browser-chrome-bottom: 0px;
   /* 系统默认字体：无 Google Fonts / 外链字体，弱网瞬间可渲染 */
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -396,6 +398,26 @@ body::before {
   overflow-x: auto;
   padding-bottom: 4px;
   margin-bottom: 6px;
+}
+.habit-strip:has(.empty-card) {
+  display: block;
+  overflow: visible;
+}
+.empty-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.empty-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 .habit-pill {
   min-width: 118px;
@@ -804,12 +826,12 @@ body::before {
     overflow: hidden !important;
   }
 
-  /* 强制全屏：去掉过大占位，仅保留安全区上下 padding */
+  /* 强制全屏：Safari 网页里不要用 body 底 padding 再挤一层（会与底栏叠算） */
   body {
     background: var(--paper);
     padding-top: env(safe-area-inset-top) !important;
     padding-right: 0 !important;
-    padding-bottom: env(safe-area-inset-bottom) !important;
+    padding-bottom: 0 !important;
     padding-left: 0 !important;
   }
   body::before {
@@ -867,11 +889,45 @@ body::before {
   .phone-scroll {
     width: 100% !important;
     height: 100% !important;
-    padding: 12px 14px 100px;
+    /* Tab 高度 + 安全区 + Safari 底栏（--browser-chrome-bottom） */
+    padding:
+      12px
+      14px
+      calc(118px + env(safe-area-inset-bottom, 0px) + var(--browser-chrome-bottom, 0px));
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     overscroll-behavior-y: none;
     overflow-y: auto;
+  }
+
+  .habit-strip {
+    display: block;
+    overflow: visible;
+  }
+  .habit-pill {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 8px;
+  }
+
+  /* 底部 Tab：fixed 贴视觉视口，避开 Safari 工具栏遮挡 */
+  .tabbar {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px) + var(--browser-chrome-bottom, 0px)) !important;
+    height: 68px;
+    border-radius: 18px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #fff;
+    z-index: 50;
+  }
+  .tab strong { font-size: 16px; }
+  .tab small { font-size: 11px; }
+
+  .toast {
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px) + var(--browser-chrome-bottom, 0px));
   }
 
   /* 绿色主攻卡更紧凑 */
@@ -895,20 +951,6 @@ body::before {
     margin-bottom: 12px;
   }
 
-  /* 底部 Tab：实色背景；底安全区已由 body padding-bottom 处理 */
-  .tabbar {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    height: 68px;
-    border-radius: 18px;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: #fff;
-  }
-  .tab strong { font-size: 16px; }
-  .tab small { font-size: 11px; }
-
   /* 打卡按钮加大，更易点 */
   .action-btn,
   .chip-btn.primary {
@@ -931,26 +973,13 @@ body::before {
     flex: 1.45;
   }
 
-  /* 桌面侧 panel 毛玻璃也关掉（兜底） */
   .panel {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 
-  .toast {
-    bottom: 96px;
-  }
-
   .modal-actions {
-    /* 底安全区已由 body 处理 */
-    padding-bottom: 0;
-  }
-
-  .action-btn,
-  .chip-btn.primary,
-  .primary-btn {
-    /* 底部可点击控件远离 Home Indicator */
-    margin-bottom: 0;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--browser-chrome-bottom, 0px));
   }
 }
 

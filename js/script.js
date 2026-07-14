@@ -399,6 +399,12 @@ function renderFocus() {
   const d = DIMS.find((x) => x.id === state.focus);
   document.getElementById("focusTitle").textContent = d.name;
   document.getElementById("focusSub").textContent = d.sub;
+  const weekEl = document.getElementById("weekNo");
+  if (weekEl) {
+    const mains = focusGoals();
+    const week = mains.length ? goalWeekNo(mains[0]) : 1;
+    weekEl.textContent = String(week);
+  }
   renderRadarChart();
   document.getElementById("dangerAlert").classList.toggle(
     "show",
@@ -516,7 +522,7 @@ function renderTodayGoals() {
     mains.forEach((g) => main.appendChild(goalCard(g)));
   }
   if (!bases.length) {
-    base.innerHTML = `<div class="goal"><div class="name" style="color:var(--ink-soft)">暂无保底目标。其它维度可先加一条保底，守住下限即可。</div></div>`;
+    base.innerHTML = `<div class="empty-card"><strong>暂无保底目标</strong>其它维度可先加一条保底，守住下限即可。</div>`;
   } else {
     bases.forEach((g) => base.appendChild(goalCard(g)));
   }
@@ -570,8 +576,8 @@ function renderHabitsList() {
   strip.innerHTML = "";
   list.innerHTML = "";
   if (!state.habits.length) {
-    strip.innerHTML = `<div class="habit-pill" style="opacity:.85"><div class="t">还没有习惯</div><div class="s">添加目标后会自动关联打卡</div></div>`;
-    list.innerHTML = `<div class="habit-card"><h4 style="margin-bottom:6px">从第一个目标开始</h4><div class="streak">在「衡」中点「+ 目标」，打卡习惯会自动创建并出现在这里。</div></div>`;
+    strip.innerHTML = `<div class="empty-card"><strong>还没有习惯</strong>添加目标后会自动关联打卡，并出现在这里。</div>`;
+    list.innerHTML = `<div class="empty-card"><strong>从第一个目标开始</strong>在「衡」中点「+ 目标」，打卡习惯会自动创建。</div>`;
     return;
   }
   const sorted = [...state.habits].sort((a, b) => (a.dim === state.focus ? -1 : 1) - (b.dim === state.focus ? -1 : 1));
@@ -883,10 +889,23 @@ function renderAll() {
   renderMe();
 }
 
+function syncBrowserChromeInset() {
+  const root = document.documentElement;
+  const vv = window.visualViewport;
+  if (!vv) {
+    root.style.setProperty("--browser-chrome-bottom", "0px");
+    return;
+  }
+  // Safari 底栏等：布局高度与可见区差值
+  const inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+  root.style.setProperty("--browser-chrome-bottom", inset + "px");
+}
+
 function initApp() {
   if (!state || !Array.isArray(state.goals) || !Array.isArray(state.habits)) {
     state = createDefaultState();
   }
+  syncBrowserChromeInset();
   renderAll();
 }
 
@@ -898,3 +917,9 @@ window.onload = function () {
   }
   initApp();
 };
+
+window.addEventListener("resize", syncBrowserChromeInset);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", syncBrowserChromeInset);
+  window.visualViewport.addEventListener("scroll", syncBrowserChromeInset);
+}
