@@ -370,6 +370,7 @@ function switchTab(name) {
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.dataset.screen === name));
   document.getElementById("phoneScroll").scrollTop = 0;
+  lockTabbar();
 }
 
 document.querySelectorAll(".tab").forEach((tab) => {
@@ -898,19 +899,19 @@ function isStandalonePwa() {
 }
 
 function syncBrowserChromeInset() {
-  const root = document.documentElement;
-  // 主屏幕 PWA：只用系统 safe-area，避免 Tab 被抬高悬空
-  if (isStandalonePwa()) {
-    root.style.setProperty("--browser-chrome-bottom", "0px");
-    return;
-  }
-  const vv = window.visualViewport;
-  if (!vv) {
-    root.style.setProperty("--browser-chrome-bottom", "0px");
-    return;
-  }
-  const inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-  root.style.setProperty("--browser-chrome-bottom", inset + "px");
+  // Tab 使用 position:fixed + safe-area，不再用 visualViewport 抬高，避免悬空
+  document.documentElement.style.setProperty("--browser-chrome-bottom", "0px");
+}
+
+function lockTabbar() {
+  const bar = document.getElementById("tabbar") || document.querySelector(".tabbar");
+  if (!bar) return;
+  bar.style.position = "fixed";
+  bar.style.left = "14px";
+  bar.style.right = "14px";
+  bar.style.bottom = "calc(10px + env(safe-area-inset-bottom, 0px))";
+  bar.style.zIndex = "10000";
+  bar.style.transform = "translateZ(0)";
 }
 
 function initApp() {
@@ -918,7 +919,9 @@ function initApp() {
     state = createDefaultState();
   }
   syncBrowserChromeInset();
+  lockTabbar();
   renderAll();
+  lockTabbar();
 }
 
 window.onload = function () {
