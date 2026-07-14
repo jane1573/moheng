@@ -517,7 +517,7 @@ function renderTodayGoals() {
   const mains = focusGoals().slice(0, 3);
   const bases = state.goals.filter((g) => !(g.type === "main" && g.dim === state.focus));
   if (!mains.length) {
-    main.innerHTML = `<div class="goal"><div class="name" style="color:var(--ink-soft)">还没有主攻目标。点右上「+ 目标」，从睡眠 / 运动等模板开始。</div></div>`;
+    main.innerHTML = `<div class="empty-card"><strong>还没有主攻目标</strong>点右上「+ 目标」，从睡眠 / 运动等模板开始。</div>`;
   } else {
     mains.forEach((g) => main.appendChild(goalCard(g)));
   }
@@ -889,14 +889,26 @@ function renderAll() {
   renderMe();
 }
 
+function isStandalonePwa() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
 function syncBrowserChromeInset() {
   const root = document.documentElement;
+  // 主屏幕 PWA：只用系统 safe-area，避免 Tab 被抬高悬空
+  if (isStandalonePwa()) {
+    root.style.setProperty("--browser-chrome-bottom", "0px");
+    return;
+  }
   const vv = window.visualViewport;
   if (!vv) {
     root.style.setProperty("--browser-chrome-bottom", "0px");
     return;
   }
-  // Safari 底栏等：布局高度与可见区差值
   const inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
   root.style.setProperty("--browser-chrome-bottom", inset + "px");
 }
