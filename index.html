@@ -25,9 +25,10 @@
       </div>
     </header>
 
-    <div class="workspace">
-      <!-- Mobile -->
-      <div class="phone-wrap">
+    <!-- 桌面预览信息区（手机端隐藏）；手机容器独立于 workspace，避免被一并隐藏 -->
+    <div class="workspace" aria-hidden="true"></div>
+
+    <div class="phone-wrap">
         <div class="phone" id="phone">
           <div class="phone-notch phone-mockup" aria-hidden="true"><i></i></div>
           <div class="phone-scroll phone-screen" id="phoneScroll">
@@ -141,7 +142,6 @@
           <div class="phone-home-indicator phone-mockup" aria-hidden="true"><i></i></div>
         </div>
       </div>
-    </div>
   </div>
 
   <div class="toast" id="toast"></div>
