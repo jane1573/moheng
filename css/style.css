@@ -457,6 +457,116 @@ body::before {
 }
 .alert.show { display: block; animation: fadeUp 0.35s var(--ease); }
 
+/* —— 五维态势 / 提醒时间线（驾驶舱并入 APP） —— */
+.panel-hint {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.radar-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px 10px;
+  margin: 12px 0 14px;
+  box-shadow: 0 6px 18px rgba(22, 25, 22, 0.04);
+}
+.radar-wrap {
+  margin: 4px 0 8px;
+}
+.radar-wrap svg {
+  display: block;
+  max-width: 280px;
+  margin: 0 auto;
+}
+.dim-score-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dim-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--mist);
+  border: 1px solid transparent;
+  font-size: 14px;
+}
+.dim-score-row.is-focus {
+  background: var(--jade-soft);
+  border-color: #b7d5c8;
+}
+.dim-score-row .l {
+  font-weight: 600;
+  color: var(--ink);
+}
+.dim-score-row .l small {
+  font-weight: 500;
+  color: var(--jade-deep);
+  margin-left: 6px;
+  font-size: 12px;
+}
+.dim-score-row .r {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.dim-score-row.is-focus .r {
+  color: var(--jade-deep);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.timeline-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 14px rgba(22, 25, 22, 0.03);
+}
+.timeline-item .t {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.timeline-item .body .name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.timeline-item .body .meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.timeline-item .badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--mist);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.timeline-item.done .badge {
+  background: var(--jade-soft);
+  color: var(--jade-deep);
+}
+.timeline-item.done {
+  opacity: 0.88;
+}
+
 /* 确保 TabBar 永远贴底 */
 .tabbar {
   position: fixed !important;

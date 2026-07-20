@@ -147,6 +147,72 @@ function createDefaultState() {
   };
 }
 
+/** 原型演示数据（对齐桌面驾驶舱截图气质；仅在无 localStorage 时注入） */
+function createDemoState() {
+  const start = "2026-07-01";
+  return {
+    focus: "personal",
+    belief: "我不想成为成功但身心崩掉的人。",
+    scores: { personal: 3, family: 4, career: 3, team: 2, belief: 2 },
+    goals: [
+      {
+        id: 1,
+        template: "sleep",
+        type: "main",
+        dim: "personal",
+        startDate: start,
+        metrics: { bedtime: "23:30", daysPerWeek: 5, weeks: 4 },
+        habitId: 1,
+      },
+      {
+        id: 2,
+        template: "exercise",
+        type: "main",
+        dim: "personal",
+        startDate: start,
+        metrics: { timesPerWeek: 2, minutes: 30, weeks: 4 },
+        habitId: 2,
+      },
+      {
+        id: 3,
+        template: "deepwork",
+        type: "main",
+        dim: "personal",
+        startDate: start,
+        metrics: { minMinutes: 60, maxMinutes: 90, daysPerWeek: 5, weeks: 6 },
+        habitId: 3,
+      },
+      {
+        id: 4,
+        template: "accompany",
+        type: "base",
+        dim: "family",
+        startDate: start,
+        metrics: { timesPerWeek: 1, minutes: 45, noPhone: "是", weeks: 4 },
+        habitId: 4,
+      },
+      {
+        id: 5,
+        template: "output",
+        type: "base",
+        dim: "career",
+        startDate: start,
+        metrics: { timesPerWeek: 1, note: "最关键事业产出", weeks: 4 },
+        habitId: 5,
+      },
+    ],
+    habits: [
+      { id: 1, name: "睡眠打卡", time: "07:00 / 23:15", on: true, dim: "personal", logs: [] },
+      { id: 2, name: "运动 30 分钟", time: "18:30", on: true, dim: "personal", logs: [] },
+      { id: 3, name: "深度专注时段", time: "09:30", on: true, dim: "personal", logs: [] },
+      { id: 4, name: "家庭陪伴提醒", time: "20:00", on: true, dim: "family", logs: [] },
+      { id: 5, name: "关键产出打卡", time: "18:00", on: true, dim: "career", logs: [] },
+    ],
+    nextId: 6,
+    nextHabitId: 6,
+  };
+}
+
 const STORAGE_KEY = "moheng_data";
 const LEGACY_STORAGE_KEYS = ["moheng_state_v1"];
 
@@ -387,13 +453,84 @@ function focusProgress() {
   return Math.round(gs.reduce((a, g) => a + calcGoalProgress(g), 0) / gs.length);
 }
 
-/** 首页主攻进度环（轻量图表） */
-function renderRadarChart() {
+/** 首页主攻进度环 */
+function updateFocusRing() {
   const pct = focusProgress();
   const pctEl = document.getElementById("focusPct");
   const ringEl = document.getElementById("focusRing");
   if (pctEl) pctEl.textContent = pct + "%";
   if (ringEl) ringEl.style.strokeDashoffset = String(188.4 * (1 - pct / 100));
+}
+
+/** 五维雷达（真五边形） */
+function renderPentagonRadar() {
+  const svg = document.getElementById("radarSvg");
+  if (!svg) return;
+  const cx = 120;
+  const cy = 112;
+  const rMax = 78;
+  const n = DIMS.length;
+  const angleAt = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / n;
+  const pt = (i, r) => {
+    const a = angleAt(i);
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  };
+  const poly = (radius) =>
+    DIMS.map((_, i) => pt(i, radius).map((v) => v.toFixed(1)).join(",")).join(" ");
+
+  const valuePoly = DIMS.map((d, i) => {
+    const score = Number(state.scores[d.id]) || 0;
+    const r = (Math.max(0, Math.min(10, score)) / 10) * rMax;
+    return pt(i, r).map((v) => v.toFixed(1)).join(",");
+  }).join(" ");
+
+  const rings = [0.35, 0.65, 1]
+    .map(
+      (t) =>
+        `<polygon points="${poly(rMax * t)}" fill="none" stroke="#d5dad1" stroke-width="1" />`
+    )
+    .join("");
+  const axes = DIMS.map((_, i) => {
+    const [x, y] = pt(i, rMax);
+    return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e7ebe5" stroke-width="1" />`;
+  }).join("");
+  const labels = DIMS.map((d, i) => {
+    const [x, y] = pt(i, rMax + 18);
+    const focus = d.id === state.focus;
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="11" font-weight="${focus ? 700 : 500}" fill="${focus ? "#154c3c" : "#3a4038"}">${d.name}</text>`;
+  }).join("");
+
+  svg.innerHTML = `
+    ${rings}
+    ${axes}
+    <polygon points="${valuePoly}" fill="rgba(31,107,85,0.22)" stroke="#1f6b55" stroke-width="2" stroke-linejoin="round" />
+    ${labels}
+  `;
+}
+
+/** 五维分数列表（主攻高亮） */
+function renderDimScores() {
+  const list = document.getElementById("dimScoreList");
+  if (!list) return;
+  list.innerHTML = "";
+  DIMS.forEach((d) => {
+    const row = document.createElement("div");
+    const isFocus = d.id === state.focus;
+    row.className = "dim-score-row" + (isFocus ? " is-focus" : "");
+    const score = Number(state.scores[d.id]) || 0;
+    row.innerHTML = `
+      <span class="l">${d.name}${isFocus ? "<small>· 主攻</small>" : ""}</span>
+      <span class="r">${score}/10</span>
+    `;
+    list.appendChild(row);
+  });
+}
+
+/** 兼容旧名：同时刷新进度环 + 雷达 + 分数列表 */
+function renderRadarChart() {
+  updateFocusRing();
+  renderPentagonRadar();
+  renderDimScores();
 }
 
 function renderFocus() {
@@ -463,6 +600,7 @@ function updateCheckInUI(habitId) {
   document.querySelectorAll(`.habit-pill[data-habit-id="${habitId}"]`).forEach((el) => patchHabitPillEl(el, h));
   document.querySelectorAll(`.habit-card[data-habit-id="${habitId}"]`).forEach((el) => patchHabitCardEl(el, h));
   renderRadarChart();
+  renderRemindTimeline();
 }
 
 function goalCard(g) {
@@ -579,6 +717,7 @@ function renderHabitsList() {
   if (!state.habits.length) {
     strip.innerHTML = `<div class="empty-card"><strong>还没有习惯</strong>添加目标后会自动关联打卡，并出现在这里。</div>`;
     list.innerHTML = `<div class="empty-card"><strong>从第一个目标开始</strong>在「衡」中点「+ 目标」，打卡习惯会自动创建。</div>`;
+    renderRemindTimeline();
     return;
   }
   const sorted = [...state.habits].sort((a, b) => (a.dim === state.focus ? -1 : 1) - (b.dim === state.focus ? -1 : 1));
@@ -617,10 +756,58 @@ function renderHabitsList() {
       h.on = !h.on;
       saveStateToLocalStorage();
       patchHabitCardEl(card, h);
+      renderRemindTimeline();
       toast(h.on ? "已开启提醒" : "已关闭提醒");
     });
     card.querySelector(".chip-btn").addEventListener("click", () => toggleHabit(h.id));
     list.appendChild(card);
+  });
+  renderRemindTimeline();
+}
+
+/** 从习惯 time 字段提取可排序 / 展示用的 HH:MM（多段取最后一段，如睡前提醒） */
+function habitTimeParts(h) {
+  return String(h.time || "").match(/\d{1,2}:\d{2}/g) || [];
+}
+function habitSortKey(h) {
+  const parts = habitTimeParts(h);
+  if (!parts.length) return "99:99";
+  const raw = parts[parts.length - 1];
+  const [hh, mm] = raw.split(":");
+  return `${String(hh).padStart(2, "0")}:${mm}`;
+}
+function habitDisplayClock(h) {
+  return habitSortKey(h) === "99:99" ? "--:--" : habitSortKey(h);
+}
+
+/** 习页：今日提醒时间线（桌面右栏并入） */
+function renderRemindTimeline() {
+  const box = document.getElementById("remindTimeline");
+  if (!box) return;
+  box.innerHTML = "";
+  const items = state.habits
+    .filter((h) => h.on !== false)
+    .slice()
+    .sort((a, b) => habitSortKey(a).localeCompare(habitSortKey(b)));
+  if (!items.length) {
+    box.innerHTML = `<div class="empty-card"><strong>暂无开启的提醒</strong>在习惯卡片上打开提醒开关后会出现在这里。</div>`;
+    return;
+  }
+  items.forEach((h) => {
+    const done = habitDoneToday(h);
+    const row = document.createElement("div");
+    row.className = "timeline-item" + (done ? " done" : "");
+    row.dataset.habitId = String(h.id);
+    row.innerHTML = `
+      <div class="t">${habitDisplayClock(h)}</div>
+      <div class="body">
+        <div class="name">${h.name}</div>
+        <div class="meta">${dimName(h.dim)} · 提醒 ${h.time}</div>
+      </div>
+      <span class="badge">${done ? "已完成" : "待打卡"}</span>
+    `;
+    row.addEventListener("click", () => toggleHabit(h.id));
+    box.appendChild(row);
   });
 }
 
@@ -701,6 +888,7 @@ function saveReview() {
   saveStateToLocalStorage();
   toast("本周复盘已保存");
   renderFocus();
+  renderRadarChart();
 }
 
 function defaultMetrics(templateId) {
@@ -929,10 +1117,11 @@ function initApp() {
 }
 
 window.onload = function () {
-  // 按要求：页面加载时立即从 localStorage 恢复
+  // 按要求：页面加载时立即从 localStorage 恢复；无数据 / 空壳则注入驾驶舱演示种子
   const ok = loadStateFromLocalStorage();
-  if (!ok) {
-    state = createDefaultState();
+  if (!ok || (!state.goals.length && !state.habits.length)) {
+    state = createDemoState();
+    saveStateToLocalStorage();
   }
   initApp();
 };

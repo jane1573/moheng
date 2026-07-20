@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="./assets/icon.png" />
   <link rel="icon" type="image/png" href="./assets/icon.png" />
   <title>墨衡 · 人生五维动态平衡</title>
-  <link rel="stylesheet" href="./css/style.css?v=20260714j" />
+  <link rel="stylesheet" href="./css/style.css?v=20260720a" />
 </head>
 <body>
   <div class="stage">
@@ -67,8 +67,20 @@
 
               <div class="alert" id="dangerAlert">检测到有维度接近危险线，建议本周优先救火，暂缓加目标。</div>
 
+              <!-- 五维态势（桌面左栏并入） -->
+              <div class="panel radar-panel">
+                <div class="section-h" style="margin-top:0">
+                  <h3>五维态势</h3>
+                  <span class="panel-hint">雷达 · 分数</span>
+                </div>
+                <div class="radar-wrap">
+                  <svg id="radarSvg" viewBox="0 0 240 220" width="100%" height="220" aria-label="五维雷达图"></svg>
+                </div>
+                <div class="dim-score-list" id="dimScoreList"></div>
+              </div>
+
               <div class="section-h">
-                <h3>主攻 Top3</h3>
+                <h3>目标看板 · 主攻</h3>
                 <button type="button" onclick="openGoalModal()">+ 目标</button>
               </div>
               <div class="goal-list" id="mainGoals"></div>
@@ -80,7 +92,7 @@
               <div class="habit-strip" id="habitStrip"></div>
 
               <div class="section-h" style="margin-top:14px">
-                <h3>保底目标</h3>
+                <h3>目标看板 · 保底</h3>
               </div>
               <div class="goal-list" id="baseGoals"></div>
             </section>
@@ -91,6 +103,14 @@
                 <div class="eyebrow">习惯养成</div>
                 <h2>提醒到点<br />打卡算数</h2>
                 <p>主攻维相关习惯优先置顶。</p>
+              </div>
+              <div class="section-h" style="margin-top:0">
+                <h3>今日提醒</h3>
+                <span class="panel-hint">按时间</span>
+              </div>
+              <div class="timeline" id="remindTimeline"></div>
+              <div class="section-h" style="margin-top:16px">
+                <h3>习惯列表</h3>
               </div>
               <div id="habitList"></div>
             </section>
@@ -192,6 +212,6 @@
     </div>
   </div>
 
-  <script src="./js/script.js?v=20260714j"></script>
+  <script src="./js/script.js?v=20260720a"></script>
 </body>
 </html>
